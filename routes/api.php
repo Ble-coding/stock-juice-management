@@ -20,5 +20,5 @@ Route::apiResource('suppliers', SupplierController::class);
 Route::apiResource('stocks', StockController::class)->middleware('stock');
 Route::apiResource('sales', SaleController::class);
 Route::apiResource('customers', CustomerController::class);
-
-
+// Ajouter une route pour restaurer un client supprimé
+Route::post('customers/{id}/restore', [CustomerController::class, 'restore'])->name('customers.restore');

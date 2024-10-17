@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Customer;
 
 class AuthController extends Controller
 {
@@ -55,6 +56,47 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
         ]);
     }
+
+
+    // public function login(Request $request)
+    // {
+    //     // Valider les informations d'identification
+    //     $credentials = $request->only('email', 'password');
+
+    //     // Essayer d'authentifier en tant que client
+    //     if (Auth::guard('customer')->attempt($credentials)) {
+    //         $customer = Auth::guard('customer')->user(); // Récupère l'utilisateur client authentifié
+
+    //         // Mettre à jour last_login à la date et l'heure actuelles
+    //         $customer->last_login = now();
+    //         $customer->save();
+
+    //         // Générer un token d'authentification
+    //         $token = $customer->createToken('auth_token')->plainTextToken;
+
+    //         return response()->json([
+    //             'access_token' => $token,
+    //             'token_type' => 'Bearer',
+    //             'user_type' => 'customer',
+    //         ]);
+    //     }
+
+    //     // Essayer d'authentifier en tant qu'administrateur
+    //     if (Auth::guard('admin')->attempt($credentials)) {
+    //         $admin = Auth::guard('admin')->user(); // Récupère l'utilisateur administrateur authentifié
+
+    //         // Générer un token d'authentification pour l'administrateur
+    //         $token = $admin->createToken('auth_token')->plainTextToken;
+
+    //         return response()->json([
+    //             'access_token' => $token,
+    //             'token_type' => 'Bearer',
+    //             'user_type' => 'admin',
+    //         ]);
+    //     }
+
+    //     return response()->json(['message' => 'Invalid credentials'], 401);
+    // }
 
     public function login(Request $request)
     {

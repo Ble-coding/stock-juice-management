@@ -21,11 +21,15 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|email|unique:customers,email,' . $this->route('customer')->id,
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
+            'kyc_status' => 'nullable|string',
+            'last_login' => 'nullable|date',
+            'registered_at' => 'nullable|date',
         ];
     }
 }

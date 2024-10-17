@@ -26,6 +26,10 @@ class StoreCustomerRequest extends FormRequest
             'email' => 'required|email|unique:customers,email',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
+            'kyc_status' => 'nullable|string',
+            'last_login' => 'nullable|date',
+            'registered_at' => 'nullable|date',
+            // 'code_customer' => 'nullable|string|unique:customers,code_customer',
         ];
     }
 }
