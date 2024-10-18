@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class DropCategoryIdFromProductsTable extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('products', function (Blueprint $table) {
+            // Supprimer la contrainte de clé étrangère si elle existe
+            $table->dropForeign(['category_id']); // Assurez-vous que le nom est correct
+
+            // Supprimer la colonne category_id
+            $table->dropColumn('category_id');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('products', function (Blueprint $table) {
+            // Rétablir la colonne category_id
+            $table->unsignedBigInteger('category_id')->nullable();
+        });
+    }
+}

@@ -107,5 +107,13 @@ class User extends Authenticatable
         return $this->hasMany(Product::class);
     }
 
-  
+     /**
+     * Define the one-to-many relationship with Category.
+     */
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
+
+
 }
