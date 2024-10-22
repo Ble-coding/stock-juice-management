@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
     use HasFactory;
+    use SoftDeletes; // Activer le soft delete
 
     protected $fillable = [
-        // 'name', 'description', 'price', 'stock_quantity', 'category_id',user-id
          'user_id',
-         'title', 'regular_price', 'sale_price', 'stock', 'sku', 'image'
+         'title', 'regular_price', 'sale_price', 'stock', 'sku', 'image', 'status','is_starred'
+         // 'name', 'description', 'price', 'stock_quantity', 'category_id',user-id
     ];
 
 

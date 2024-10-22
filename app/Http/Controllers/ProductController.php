@@ -15,7 +15,18 @@ class ProductController extends Controller
     public function index()
     {
         // Affiche tous les produits
-        return Product::all();
+        // return Product::all();
+        // Fetch all products with related categories and tags
+
+            $products = Product::with(['categories', 'tags'])->withTrashed()->get();
+
+              // Assurez-vous de renvoyer l'URL complète des images si elles sont stockées dans le système de fichiers public
+                foreach ($products as $product) {
+                    $product->image = url('storage/' . $product->image);
+                }
+
+                return response()->json($products);
+
     }
 
     /**
@@ -45,7 +56,7 @@ class ProductController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
-    
+
     /**
      * Display the specified resource.
      */
@@ -73,7 +84,7 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
          // Met à jour un produit spécifique
-        
+
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
         }
@@ -94,9 +105,31 @@ class ProductController extends Controller
          if (!$product) {
              return response()->json(['message' => 'Product not found'], 404);
          }
- 
+
          $product->delete();
- 
+
          return response()->json(['message' => 'Product deleted successfully']);
     }
+
+
+
+    public function restore($id)
+    {
+        $product = Product::withTrashed()->find($id); // Trouver le client avec soft deletes
+        if ($product && $product->trashed()) {
+            $product->restore(); // Restaurer le client
+            return response()->json(['message' => 'Product restored successfully'], 200);
+        }
+        return response()->json(['message' => 'Product not found or not deleted'], 404);
+    }
+
+    public function toggleStarred($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->is_starred = !$product->is_starred; // Inverse le statut
+        $product->save();
+
+        return response()->json(['success' => true, 'is_starred' => $product->is_starred]);
+    }
+
 }

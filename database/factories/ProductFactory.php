@@ -47,6 +47,8 @@ class ProductFactory extends Factory
             'sku' => $this->faker->unique()->bothify('UY-####'),
             'image' => $this->faker->imageUrl(640, 480, 'products', true),
             'user_id' => User::factory(),
+            'status' => $this->faker->randomElement(['New', 'Featured', 'Out of Stock']),
+            'is_starred' => $this->faker->boolean(30),
         ];
 
 

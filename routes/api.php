@@ -9,6 +9,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TagController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,3 +26,5 @@ Route::apiResource('customers', CustomerController::class);
 // Ajouter une route pour restaurer un client supprimé
 Route::post('customers/{id}/restore', [CustomerController::class, 'restore'])->name('customers.restore');
 Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+Route::patch('/products/{id}/toggle-starred', [ProductController::class, 'toggleStarred']);
+Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
