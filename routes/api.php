@@ -10,15 +10,18 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\ImageController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-
+Route::apiResource('products', ProductController::class);
 Route::apiResource('tags', TagController::class);
 Route::apiResource('categories', CategoryController::class);
-Route::apiResource('products', ProductController::class);
+Route::post('images', [ImageController::class, 'store']);
+Route::get('get-categories-tags', [ProductController::class, 'getCategoriesAndTags']);
+Route::get('/check-sku', [ProductController::class, 'checkSKUUnique']);
 Route::apiResource('suppliers', SupplierController::class);
 Route::apiResource('stocks', StockController::class)->middleware('stock');
 Route::apiResource('sales', SaleController::class);
@@ -28,3 +31,4 @@ Route::post('customers/{id}/restore', [CustomerController::class, 'restore'])->n
 Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
 Route::patch('/products/{id}/toggle-starred', [ProductController::class, 'toggleStarred']);
 Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+

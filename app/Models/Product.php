@@ -33,6 +33,10 @@ class Product extends Model
         });
     }
 
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 
     public function sales()
     {
@@ -60,11 +64,6 @@ class Product extends Model
         return $this->belongsToMany(Tag::class, 'product_tag');
     }
 
-     // Relation avec les catégories
-    //  public function category()
-    //  {
-    //      return $this->belongsTo(Category::class);
-    //  }
 
 
 }

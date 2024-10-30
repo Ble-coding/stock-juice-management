@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Tag;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -25,8 +28,26 @@ class ProductController extends Controller
                     $product->image = url('storage/' . $product->image);
                 }
 
+
                 return response()->json($products);
 
+    }
+
+    public function getCategoriesAndTags() {
+        $categories = Category::select('id', 'name')->orderBy('name')->get();
+        $tags = Tag::select('id', 'name')->orderBy('name')->get();
+
+        return response()->json([
+            'categories' => $categories,
+            'tags' => $tags,
+        ]);
+    }
+
+    public function checkSKUUnique(Request $request)
+    {
+        $sku = $request->query('sku');
+        $isUnique = !Product::where('sku', $sku)->exists();
+        return response()->json(['isUnique' => $isUnique]);
     }
 
     /**
@@ -34,25 +55,34 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-   /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreProductRequest $request)
-    {
+    public function store(StoreProductRequest $request) {
         try {
-            // Créer le produit avec les données validées
-            $product = Product::create($request->validated());
+            \Log::info('Requête reçue', $request->all()); // Log toutes les données reçues
 
-            // Retourner une réponse JSON avec le produit créé et le code HTTP 201 (Created)
+            $product = Product::create($request->except('images'));
+            $product->categories()->sync($request->category);
+            $product->tags()->sync($request->tag);
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    \Log::info('Image reçue', ['name' => $image->getClientOriginalName()]);
+                    $path = $image->store('products', 'public');
+                    $product->images()->create(['path' => $path]);
+                }
+            } else {
+                \Log::info('Aucune image reçue');
+            }
+
             return response()->json($product, 201);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            // Si une exception est levée (par exemple, une erreur de validation ou autre erreur lors de la création)
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -131,5 +161,7 @@ class ProductController extends Controller
 
         return response()->json(['success' => true, 'is_starred' => $product->is_starred]);
     }
+
+
 
 }

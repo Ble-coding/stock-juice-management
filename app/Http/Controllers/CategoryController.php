@@ -84,4 +84,8 @@ class CategoryController extends Controller
         }
         return response()->json(['message' => 'Category not found or not deleted'], 404);
     }
+
+
+
+
 }
